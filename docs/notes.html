@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>create-devkit-cli — Complete Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    line-height: 1.7;
+    font-size: 13px;
+  }
+
+  /* ── Cover Page ──────────────────────────────── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #0f0f13 0%, #1a1a30 50%, #0d1b2a 100%);
+    color: #fff;
+    padding: 60px 40px;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 50% 30%, rgba(108,99,255,0.15) 0%, transparent 60%);
+  }
+  .cover-content { position: relative; z-index: 1; }
+  .cover-icon { font-size: 72px; margin-bottom: 20px; }
+  .cover h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #fff 30%, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: #94a3b8;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 30px;
+  }
+  .cover .badge {
+    display: inline-block;
+    background: rgba(108,99,255,0.2);
+    border: 1px solid rgba(108,99,255,0.3);
+    color: #a78bfa;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ── Page Layout ─────────────────────────────── */
+  .page {
+    padding: 50px 60px;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* ── Headings ────────────────────────────────── */
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f0f13;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #6c63ff;
+    display: inline-block;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 28px 0 12px 0;
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+    margin: 20px 0 8px 0;
+  }
+
+  /* ── Text ────────────────────────────────────── */
+  p { margin: 10px 0; color: #334155; }
+  strong { color: #0f172a; }
+
+  /* ── Code ────────────────────────────────────── */
+  code {
+    font-family: 'Fira Code', monospace;
+    background: #f1f5f9;
+    color: #6c63ff;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 18px 22px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 14px 0;
+    border-left: 4px solid #6c63ff;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* ── Tables ──────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  th {
+    background: #6c63ff;
+    color: #fff;
+    text-align: left;
+    padding: 10px 16px;
+    font-weight: 600;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+  tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+  /* ── Lists ───────────────────────────────────── */
+  ul, ol { margin: 10px 0 10px 24px; color: #334155; }
+  li { margin: 6px 0; }
+
+  /* ── Info Boxes ──────────────────────────────── */
+  .info-box {
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin: 16px 0;
+    border-left: 4px solid;
+  }
+  .info-box.purple { background: #f5f3ff; border-color: #6c63ff; }
+  .info-box.blue { background: #eff6ff; border-color: #3b82f6; }
+  .info-box.green { background: #f0fdf4; border-color: #22c55e; }
+  .info-box.orange { background: #fff7ed; border-color: #f97316; }
+  .info-box .label {
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .info-box.purple .label { color: #6c63ff; }
+  .info-box.blue .label { color: #3b82f6; }
+  .info-box.green .label { color: #22c55e; }
+  .info-box.orange .label { color: #f97316; }
+
+  /* ── Diagram Box ─────────────────────────────── */
+  .tree {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: 'Fira Code', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #1e293b;
+    margin: 14px 0;
+  }
+
+  /* ── Flow Steps ──────────────────────────────── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #334155;
+    text-align: center;
+  }
+  .flow-arrow { font-size: 20px; color: #6c63ff; font-weight: bold; }
+
+  /* ── TOC ─────────────────────────────────────── */
+  .toc { margin: 30px 0; }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #cbd5e1;
+    font-size: 15px;
+  }
+  .toc-item .num { color: #6c63ff; font-weight: 700; margin-right: 12px; }
+  .toc-item .dots { flex: 1; border-bottom: 1px dotted #cbd5e1; margin: 0 8px; }
+  .toc-item .pg { color: #94a3b8; font-weight: 500; }
+
+  /* ── Footer ──────────────────────────────────── */
+  .footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 11px;
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 40px;
+  }
+
+  /* ── Section Number ──────────────────────────── */
+  .section-num {
+    color: #6c63ff;
+    font-weight: 800;
+    margin-right: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COVER PAGE
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-content">
+    <div class="cover-icon">⚡</div>
+    <h1>create-devkit-cli</h1>
+    <p class="subtitle">Interactive CLI Project Scaffolding Tool</p>
+    <div class="badge">v1.0.0 • Published on npm</div>
+    <p class="meta">
+      Complete Documentation & Technical Notes<br>
+      npm: <strong>npmjs.com/package/create-devkit-cli</strong><br><br>
+      Author: Ritesh Verma • November 2026
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>📑 Table of Contents</h2>
+  <div class="toc">
+    <div class="toc-item"><span><span class="num">01</span> Introduction & Overview</span><span class="pg">3</span></div>
+    <div class="toc-item"><span><span class="num">02</span> Installation & Quick Start</span><span class="pg">4</span></div>
+    <div class="toc-item"><span><span class="num">03</span> Project Architecture</span><span class="pg">5</span></div>
+    <div class="toc-item"><span><span class="num">04</span> How It Works — Complete Flow</span><span class="pg">6</span></div>
+    <div class="toc-item"><span><span class="num">05</span> File-by-File Breakdown</span><span class="pg">7</span></div>
+    <div class="toc-item"><span><span class="num">06</span> Templates — What Gets Generated</span><span class="pg">9</span></div>
+    <div class="toc-item"><span><span class="num">07</span> Dependencies Explained</span><span class="pg">12</span></div>
+    <div class="toc-item"><span><span class="num">08</span> CLI Commands & Flags</span><span class="pg">13</span></div>
+    <div class="toc-item"><span><span class="num">09</span> Publishing to npm</span><span class="pg">14</span></div>
+    <div class="toc-item"><span><span class="num">10</span> Real World Usage Examples</span><span class="pg">15</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 1: INTRODUCTION
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">01</span> Introduction & Overview</h2>
+
+  <h3>What is create-devkit-cli?</h3>
+  <p><strong>create-devkit-cli</strong> is an npm package that provides a <strong>command-line interface (CLI)</strong> for scaffolding new projects interactively. It works similarly to popular tools like <code>create-react-app</code>, <code>create-vite</code>, or <code>create-next-app</code>.</p>
+
+  <p>When a developer runs <code>npx create-devkit-cli</code>, an interactive terminal wizard launches that asks a series of questions and then generates a complete, ready-to-code project with all files, folders, and configurations in place.</p>
+
+  <h3>What Problem Does It Solve?</h3>
+  <ul>
+    <li><strong>Saves time</strong> — No need to manually create folders, write config files, or set up boilerplate code</li>
+    <li><strong>Consistency</strong> — Every project starts with best-practice file structure</li>
+    <li><strong>Beginner-friendly</strong> — Interactive prompts guide users through project setup</li>
+    <li><strong>Multi-template</strong> — One tool for 4 different project types</li>
+  </ul>
+
+  <h3>Key Features</h3>
+  <table>
+    <tr><th>Feature</th><th>Description</th></tr>
+    <tr><td>🧙 Interactive Wizard</td><td>Step-by-step prompts using Inquirer.js</td></tr>
+    <tr><td>⚡ 4 Project Templates</td><td>Vanilla JS, React, Node.js API, CLI Tool</td></tr>
+    <tr><td>📦 Package Manager Choice</td><td>npm, yarn, or pnpm</td></tr>
+    <tr><td>🔧 Auto Git Init</td><td>Optionally initializes a git repository</td></tr>
+    <tr><td>📥 Auto Install</td><td>Optionally installs dependencies automatically</td></tr>
+    <tr><td>🎨 Beautiful CLI Output</td><td>Colored text, spinners, and formatted banners</td></tr>
+    <tr><td>⚙️ Flag Support</td><td>Skip prompts with --template and project name args</td></tr>
+  </table>
+
+  <h3>Tech Stack Used</h3>
+  <table>
+    <tr><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>Node.js</td><td>≥ 16.0.0</td><td>JavaScript runtime</td></tr>
+    <tr><td>JavaScript (CommonJS)</td><td>ES6+</td><td>Module system</td></tr>
+    <tr><td>Commander.js</td><td>^12.1.0</td><td>CLI argument parsing</td></tr>
+    <tr><td>Inquirer.js</td><td>^8.2.7</td><td>Interactive terminal prompts</td></tr>
+    <tr><td>Chalk</td><td>^4.1.2</td><td>Terminal text coloring</td></tr>
+    <tr><td>Ora</td><td>^5.4.1</td><td>Loading spinner animations</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 2: INSTALLATION
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">02</span> Installation & Quick Start</h2>
+
+  <h3>Method 1 — Run Without Installing (Recommended)</h3>
+  <p>Using <code>npx</code>, you can run the tool directly without installing it globally:</p>
+  <pre><code>npx create-devkit-cli</code></pre>
+  <p><code>npx</code> downloads the package temporarily, executes it, and cleans up. Perfect for one-time use.</p>
+
+  <h3>Method 2 — Install Globally</h3>
+  <p>Install the package globally so the <code>create-devkit-cli</code> command is always available:</p>
+  <pre><code>npm install -g create-devkit-cli
+
+# Now run from anywhere:
+create-devkit-cli</code></pre>
+
+  <h3>Method 3 — Clone & Link Locally (For Development)</h3>
+  <pre><code># Clone the source code
+git clone &lt;your-repo-url&gt;
+cd create-devkit
+
+# Link it globally
+npm link
+
+# Now run from anywhere:
+create-devkit-cli</code></pre>
+
+  <h3>Quick Start Example</h3>
+  <pre><code># Step 1: Run the wizard
+npx create-devkit-cli
+
+# Step 2: Answer the prompts
+# → Project name: my-react-app
+# → Template: React
+# → Package manager: npm
+# → Git init: Yes
+# → Install deps: Yes
+
+# Step 3: Start coding!
+cd my-react-app
+npm run dev</code></pre>
+
+  <div class="info-box green">
+    <div class="label">✅ Result</div>
+    <p>A complete <strong>my-react-app/</strong> folder is created with all files, git repo initialized, and dependencies installed. Ready to code immediately!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 3: PROJECT ARCHITECTURE
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">03</span> Project Architecture</h2>
+
+  <h3>Folder Structure</h3>
+  <div class="tree">
+create-devkit/<br>
+├── 📄 package.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← npm config, dependencies, bin command<br>
+├── 📄 README.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Package documentation<br>
+├── 📄 .npmignore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Files excluded from npm publish<br>
+├── 📁 bin/<br>
+│&nbsp;&nbsp; └── 📄 cli.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Entry point (#!/usr/bin/env node)<br>
+├── 📁 src/<br>
+│&nbsp;&nbsp; ├── 📄 prompts.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Inquirer.js interactive wizard<br>
+│&nbsp;&nbsp; ├── 📄 scaffold.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← File generation engine<br>
+│&nbsp;&nbsp; └── 📁 templates/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── 📄 index.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Template registry<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── 📄 vanilla.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Vanilla JS template<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── 📄 react.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← React (Vite) template<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── 📄 node-api.js &nbsp;&nbsp;&nbsp;&nbsp;← Express REST API template<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── 📄 cli-tool.js &nbsp;&nbsp;&nbsp;&nbsp;← CLI tool template<br>
+└── 📁 node_modules/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Installed dependencies
+  </div>
+
+  <h3>Architecture Diagram</h3>
+  <div class="info-box purple">
+    <div class="label">Data Flow</div>
+    <p><strong>User runs command</strong> → <code>bin/cli.js</code> (Commander.js parses args) → <code>src/prompts.js</code> (Inquirer.js asks questions) → <code>src/scaffold.js</code> (creates files) → <code>src/templates/*.js</code> (returns file contents) → <strong>Project Generated!</strong></p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">👤 User runs<br><code>npx create-devkit-cli</code></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">📋 bin/cli.js<br>Parses args</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">🧙 prompts.js<br>Asks questions</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">⚙️ scaffold.js<br>Creates files</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">📁 templates/<br>File content</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">✅ Done!<br>Project ready</div>
+  </div>
+
+  <h3>Module System</h3>
+  <p>This package uses <strong>CommonJS (CJS)</strong> module system — <code>require()</code> and <code>module.exports</code>. This is specified in <code>package.json</code> as <code>"type": "commonjs"</code>.</p>
+
+  <div class="info-box blue">
+    <div class="label">ℹ️ Why CommonJS?</div>
+    <p>CommonJS is the most compatible module system in Node.js. It works with all Node.js versions ≥ 16 without any extra configuration. Some dependencies (like chalk v5+ and ora v6+) switched to ESM-only, so we use <strong>chalk@4</strong> and <strong>ora@5</strong> which are the last CJS-compatible versions.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 4: HOW IT WORKS
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">04</span> How It Works — Complete Flow</h2>
+
+  <h3>Step 1: Command Execution</h3>
+  <p>When you run <code>npx create-devkit-cli</code>, npm finds the package, downloads it, and executes the file specified in the <code>"bin"</code> field of <code>package.json</code>:</p>
+  <pre><code>"bin": {
+  "create-devkit-cli": "bin/cli.js"
+}</code></pre>
+  <p>The first line of <code>bin/cli.js</code> is a <strong>shebang</strong>: <code>#!/usr/bin/env node</code>. This tells the OS to execute this file using Node.js.</p>
+
+  <h3>Step 2: Argument Parsing (Commander.js)</h3>
+  <p><code>bin/cli.js</code> uses Commander.js to parse any command-line arguments:</p>
+  <pre><code>program
+  .name("create-devkit")
+  .version(pkg.version, "-v, --version")
+
+program
+  .command("new [project-name]", { isDefault: true })
+  .option("-t, --template &lt;template&gt;", "Project template")
+  .action(async (projectName, options) =&gt; {
+    await runWizard({ projectName, template: options.template });
+  });</code></pre>
+  <p>If the user passes <code>my-app</code> or <code>-t react</code>, those values are pre-filled and the corresponding prompts are skipped.</p>
+
+  <h3>Step 3: Interactive Prompts (Inquirer.js)</h3>
+  <p><code>src/prompts.js</code> displays a beautiful banner and asks 5 questions:</p>
+  <table>
+    <tr><th>#</th><th>Question</th><th>Type</th><th>Default</th></tr>
+    <tr><td>1</td><td>📁 Project name</td><td>Text input</td><td>my-app</td></tr>
+    <tr><td>2</td><td>🎨 Template selection</td><td>List (arrow keys)</td><td>—</td></tr>
+    <tr><td>3</td><td>📦 Package manager</td><td>List</td><td>npm</td></tr>
+    <tr><td>4</td><td>🔧 Initialize git?</td><td>Yes/No confirm</td><td>Yes</td></tr>
+    <tr><td>5</td><td>📥 Install dependencies?</td><td>Yes/No confirm</td><td>Yes</td></tr>
+  </table>
+
+  <h3>Step 4: Project Scaffolding (scaffold.js)</h3>
+  <p>After collecting answers, <code>scaffold.js</code> performs these operations in order:</p>
+  <ol>
+    <li><strong>Check</strong> if the target directory already exists (exits with error if yes)</li>
+    <li><strong>Create</strong> the project directory using <code>fs.mkdirSync()</code></li>
+    <li><strong>Fetch template files</strong> from <code>src/templates/</code></li>
+    <li><strong>Write all files</strong> to the new directory</li>
+    <li><strong>Git init</strong> (optional) — runs <code>git init</code> + creates <code>.gitignore</code></li>
+    <li><strong>Install dependencies</strong> (optional) — runs <code>npm install</code> / <code>yarn</code> / <code>pnpm install</code></li>
+    <li><strong>Print success</strong> banner with next steps</li>
+  </ol>
+
+  <p>Each step shows a <strong>spinner</strong> (using Ora) that shows ⏳ while running and ✔ on success.</p>
+
+  <h3>Step 5: Output</h3>
+  <pre><code>✔ Created my-app/
+✔ Scaffolded react template
+✔ Git repository initialized
+✔ Dependencies installed
+
+  ✔  Project ready! Happy hacking! 🚀
+
+  Next steps:
+
+    cd my-app
+    npm run dev</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 5: FILE-BY-FILE BREAKDOWN
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">05</span> File-by-File Breakdown</h2>
+
+  <h3>📄 package.json</h3>
+  <p>The heart of any npm package. Key fields:</p>
+  <table>
+    <tr><th>Field</th><th>Value</th><th>Purpose</th></tr>
+    <tr><td><code>name</code></td><td>"create-devkit-cli"</td><td>Package name on npm registry</td></tr>
+    <tr><td><code>version</code></td><td>"1.0.0"</td><td>Semantic versioning</td></tr>
+    <tr><td><code>bin</code></td><td>{"create-devkit-cli": "bin/cli.js"}</td><td>Maps CLI command → file</td></tr>
+    <tr><td><code>dependencies</code></td><td>chalk, commander, inquirer, ora</td><td>Runtime dependencies</td></tr>
+    <tr><td><code>engines</code></td><td>{"node": ">=16.0.0"}</td><td>Minimum Node.js version</td></tr>
+    <tr><td><code>type</code></td><td>"commonjs"</td><td>Module system (require/exports)</td></tr>
+    <tr><td><code>files</code></td><td>["bin/", "src/", "README.md"]</td><td>Files included when published</td></tr>
+  </table>
+
+  <div class="info-box orange">
+    <div class="label">⚠️ Important — The "bin" field</div>
+    <p>The <code>"bin"</code> field is what makes this an executable CLI tool. When installed globally (<code>npm i -g</code>), npm creates a symlink from the system PATH to <code>bin/cli.js</code>, making <code>create-devkit-cli</code> a runnable command.</p>
+  </div>
+
+  <h3>📄 bin/cli.js</h3>
+  <p>The entry point. Contains:</p>
+  <ul>
+    <li><strong>Shebang line</strong> — <code>#!/usr/bin/env node</code> tells the OS to run with Node.js</li>
+    <li><strong>Commander.js program</strong> — defines the <code>new</code> command (set as default)</li>
+    <li><strong>Options</strong> — <code>--version</code>, <code>--help</code>, <code>--template</code></li>
+    <li><strong>Help text</strong> — Custom examples shown with <code>--help</code></li>
+  </ul>
+
+  <h3>📄 src/prompts.js</h3>
+  <p>The interactive wizard. Contains:</p>
+  <ul>
+    <li><strong>TEMPLATES array</strong> — 4 template choices with icons and descriptions</li>
+    <li><strong>PKG_MANAGERS array</strong> — npm/yarn/pnpm choices</li>
+    <li><strong>runWizard() function</strong> — displays banner, builds question list, runs <code>inquirer.prompt()</code>, and calls scaffold()</li>
+    <li><strong>Validation</strong> — project name validation (alphanumeric + hyphens only)</li>
+    <li><strong>Smart skipping</strong> — if args are pre-filled via CLI, those prompts are skipped</li>
+  </ul>
+
+  <h3>📄 src/scaffold.js</h3>
+  <p>The core engine. Contains the <code>scaffold()</code> function with:</p>
+  <ul>
+    <li><strong>Directory check</strong> — prevents overwriting existing folders</li>
+    <li><strong>File writing</strong> — iterates template files and writes to disk using <code>fs</code></li>
+    <li><strong>Git init</strong> — runs <code>execSync("git init")</code> and writes <code>.gitignore</code></li>
+    <li><strong>Dependency install</strong> — runs the chosen package manager's install command</li>
+    <li><strong>Spinners</strong> — Ora spinners for each operation (creating, scaffolding, installing)</li>
+    <li><strong>Error handling</strong> — try/catch with colored error messages</li>
+  </ul>
+
+  <h3>📄 src/templates/index.js</h3>
+  <p>A simple <strong>registry/router</strong> that maps template names to their functions:</p>
+  <pre><code>function getTemplateFiles(template, projectName) {
+  switch (template) {
+    case "vanilla": return vanillaTemplate(projectName);
+    case "react":   return reactTemplate(projectName);
+    case "node-api": return nodeApiTemplate(projectName);
+    case "cli-tool": return cliToolTemplate(projectName);
+  }
+}</code></pre>
+  <p>Each template function returns an <strong>object</strong> where keys are file paths and values are file contents as strings.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 6: TEMPLATES
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">06</span> Templates — What Gets Generated</h2>
+
+  <h3>Template 1: ⚡ Vanilla JS</h3>
+  <p>A simple HTML + CSS + JavaScript project with a beautiful dark-themed landing page.</p>
+  <div class="tree">
+my-app/<br>
+├── index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Main HTML with hero section<br>
+├── style.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Dark theme CSS with gradients<br>
+├── src/<br>
+│&nbsp;&nbsp; └── main.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← JavaScript entry point<br>
+├── package.json &nbsp;&nbsp;&nbsp;&nbsp;← Scripts: "npm run dev" uses npx serve<br>
+└── README.md
+  </div>
+  <p><strong>Dev command:</strong> <code>npm run dev</code> → runs <code>npx serve . -p 3000</code></p>
+
+  <h3>Template 2: ⚛ React (Vite)</h3>
+  <p>A React 18 application powered by Vite with a counter demo and spinning logo animation.</p>
+  <div class="tree">
+my-app/<br>
+├── index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Root HTML (Vite entry)<br>
+├── vite.config.js &nbsp;&nbsp;&nbsp;← Vite config with React plugin<br>
+├── src/<br>
+│&nbsp;&nbsp; ├── main.jsx &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← ReactDOM.createRoot entry<br>
+│&nbsp;&nbsp; ├── App.jsx &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Main component with counter<br>
+│&nbsp;&nbsp; ├── App.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Component styles (dark theme)<br>
+│&nbsp;&nbsp; └── index.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Global reset styles<br>
+├── package.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← react, react-dom, vite, @vitejs/plugin-react<br>
+└── README.md
+  </div>
+  <p><strong>Dev command:</strong> <code>npm run dev</code> → runs <code>vite</code></p>
+  <p><strong>Build:</strong> <code>npm run build</code> → runs <code>vite build</code></p>
+
+  <h3>Template 3: 🚀 Node.js REST API</h3>
+  <p>A production-ready Express.js REST API with MVC architecture.</p>
+  <div class="tree">
+my-app/<br>
+├── src/<br>
+│&nbsp;&nbsp; ├── index.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Server entry (listen on PORT)<br>
+│&nbsp;&nbsp; ├── app.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Express app (middleware + routes)<br>
+│&nbsp;&nbsp; ├── routes/<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── index.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Route aggregator<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── example.routes.js &nbsp;← CRUD route definitions<br>
+│&nbsp;&nbsp; └── controllers/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── example.controller.js ← CRUD logic (in-memory store)<br>
+├── .env.example &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Environment variables template<br>
+├── package.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← express, cors, morgan, dotenv, nodemon<br>
+└── README.md
+  </div>
+  <p><strong>Dev command:</strong> <code>npm run dev</code> → runs <code>nodemon src/index.js</code></p>
+
+  <table>
+    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/health</td><td>Health check</td></tr>
+    <tr><td>GET</td><td>/api/v1/examples</td><td>List all items</td></tr>
+    <tr><td>GET</td><td>/api/v1/examples/:id</td><td>Get item by ID</td></tr>
+    <tr><td>POST</td><td>/api/v1/examples</td><td>Create new item</td></tr>
+    <tr><td>DELETE</td><td>/api/v1/examples/:id</td><td>Delete item</td></tr>
+  </table>
+</div>
+
+<div class="page">
+  <h3>Template 4: 🛠 CLI Tool</h3>
+  <p>A starter template for building your own CLI tool — the same stack this package uses!</p>
+  <div class="tree">
+my-app/<br>
+├── bin/<br>
+│&nbsp;&nbsp; └── cli.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Entry point with Commander.js<br>
+├── src/<br>
+│&nbsp;&nbsp; ├── index.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Library entry (programmatic use)<br>
+│&nbsp;&nbsp; └── commands/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── hello.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Example "hello" command<br>
+├── package.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← chalk, commander, inquirer, ora<br>
+└── README.md
+  </div>
+  <p><strong>Usage:</strong> <code>node bin/cli.js hello Alice --loud</code></p>
+
+  <h3>Template Comparison Summary</h3>
+  <table>
+    <tr><th>Feature</th><th>Vanilla</th><th>React</th><th>Node API</th><th>CLI Tool</th></tr>
+    <tr><td>Frontend</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+    <tr><td>Backend</td><td>❌</td><td>❌</td><td>✅</td><td>❌</td></tr>
+    <tr><td>CLI</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td></tr>
+    <tr><td>Hot Reload</td><td>❌</td><td>✅ (Vite)</td><td>✅ (Nodemon)</td><td>❌</td></tr>
+    <tr><td>Build Step</td><td>❌</td><td>✅ (Vite)</td><td>❌</td><td>❌</td></tr>
+    <tr><td># Dependencies</td><td>0</td><td>4</td><td>5</td><td>4</td></tr>
+    <tr><td># Files Created</td><td>5</td><td>8</td><td>7</td><td>5</td></tr>
+  </table>
+
+  <div class="info-box green">
+    <div class="label">💡 How templates work internally</div>
+    <p>Each template file (e.g., <code>vanilla.js</code>) exports a <strong>function</strong> that takes the project name and returns an <strong>object</strong>. The keys are relative file paths, and the values are the file contents as strings. The scaffold engine iterates over this object, creates directories with <code>fs.mkdirSync</code>, and writes files with <code>fs.writeFileSync</code>.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 7: DEPENDENCIES
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">07</span> Dependencies Explained</h2>
+
+  <h3>Runtime Dependencies (4)</h3>
+
+  <h4>1. Commander.js (^12.1.0)</h4>
+  <p>The most popular CLI framework for Node.js. It handles:</p>
+  <ul>
+    <li><strong>Command definition</strong> — <code>program.command("new")</code></li>
+    <li><strong>Option parsing</strong> — <code>--version</code>, <code>--template react</code></li>
+    <li><strong>Auto-generated help</strong> — <code>--help</code> flag</li>
+    <li><strong>Positional arguments</strong> — <code>create-devkit-cli my-app</code></li>
+  </ul>
+
+  <h4>2. Inquirer.js (^8.2.7)</h4>
+  <p>Interactive CLI prompt library. Supports:</p>
+  <ul>
+    <li><strong>input</strong> — text input (project name)</li>
+    <li><strong>list</strong> — arrow key selection (template, package manager)</li>
+    <li><strong>confirm</strong> — yes/no questions (git init, install deps)</li>
+    <li>Built-in <strong>validation</strong> and <strong>filtering</strong></li>
+  </ul>
+
+  <div class="info-box orange">
+    <div class="label">⚠️ Version note</div>
+    <p>We use Inquirer <strong>v8</strong> (not v9+) because v9+ switched to ESM-only modules, which are incompatible with our CommonJS setup. The API is identical.</p>
+  </div>
+
+  <h4>3. Chalk (^4.1.2)</h4>
+  <p>Terminal string styling. Provides chainable methods for coloring text:</p>
+  <pre><code>chalk.bold.cyan("text")     // Bold cyan text
+chalk.red("error")          // Red text
+chalk.dim("muted text")     // Dimmed text
+chalk.green("✔ success")    // Green text</code></pre>
+  <p>Used throughout for the banner, prompts, spinners, and success messages.</p>
+
+  <h4>4. Ora (^5.4.1)</h4>
+  <p>Elegant terminal spinner library. Shows loading state during async operations:</p>
+  <pre><code>const spinner = ora("Scaffolding…").start();
+// ... do work ...
+spinner.succeed("Done!");   // ✔ Done!
+spinner.fail("Error!");     // ✖ Error!
+spinner.warn("Warning!");   // ⚠ Warning!</code></pre>
+
+  <h3>Built-in Node.js Modules (No Install Needed)</h3>
+  <table>
+    <tr><th>Module</th><th>Usage</th></tr>
+    <tr><td><code>fs</code></td><td>Read/write files, create directories, check existence</td></tr>
+    <tr><td><code>path</code></td><td>Resolve and join file paths cross-platform</td></tr>
+    <tr><td><code>child_process</code></td><td>Execute shell commands (<code>git init</code>, <code>npm install</code>)</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 8: CLI COMMANDS
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">08</span> CLI Commands & Flags</h2>
+
+  <h3>All Available Commands</h3>
+  <table>
+    <tr><th>Command</th><th>Description</th><th>Example</th></tr>
+    <tr><td><code>npx create-devkit-cli</code></td><td>Run interactive wizard (default)</td><td><code>npx create-devkit-cli</code></td></tr>
+    <tr><td><code>npx create-devkit-cli new</code></td><td>Explicit "new" command</td><td><code>npx create-devkit-cli new</code></td></tr>
+    <tr><td><code>npx create-devkit-cli [name]</code></td><td>Pre-fill project name</td><td><code>npx create-devkit-cli my-app</code></td></tr>
+    <tr><td><code>npx create-devkit-cli --help</code></td><td>Show help text</td><td><code>npx create-devkit-cli -h</code></td></tr>
+    <tr><td><code>npx create-devkit-cli --version</code></td><td>Show package version</td><td><code>npx create-devkit-cli -v</code></td></tr>
+  </table>
+
+  <h3>All Available Flags</h3>
+  <table>
+    <tr><th>Flag</th><th>Short</th><th>Values</th><th>Purpose</th></tr>
+    <tr><td><code>--version</code></td><td><code>-v</code></td><td>—</td><td>Print version number</td></tr>
+    <tr><td><code>--help</code></td><td><code>-h</code></td><td>—</td><td>Print help text</td></tr>
+    <tr><td><code>--template</code></td><td><code>-t</code></td><td>vanilla | react | node-api | cli-tool</td><td>Skip template prompt</td></tr>
+  </table>
+
+  <h3>Usage Combinations</h3>
+  <pre><code># Fully interactive (all prompts)
+npx create-devkit-cli
+
+# Skip project name prompt
+npx create-devkit-cli my-app
+
+# Skip template prompt
+npx create-devkit-cli -t react
+
+# Skip both name and template prompts
+npx create-devkit-cli my-app -t node-api
+
+# Just check version
+npx create-devkit-cli -v
+
+# See help
+npx create-devkit-cli --help</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 9: PUBLISHING TO NPM
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">09</span> Publishing to npm</h2>
+
+  <h3>How npm Publishing Works</h3>
+  <div class="flow">
+    <div class="flow-step">Write code</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">npm login</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">npm publish</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Package on<br>npmjs.com</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Anyone can<br>npx it!</div>
+  </div>
+
+  <h3>Key Concepts</h3>
+  <table>
+    <tr><th>Concept</th><th>Explanation</th></tr>
+    <tr><td><strong>npm registry</strong></td><td>A public database at registry.npmjs.org where all npm packages are stored</td></tr>
+    <tr><td><strong>npm login</strong></td><td>Authenticates your terminal with your npmjs.com account</td></tr>
+    <tr><td><strong>npm publish</strong></td><td>Uploads your package files to the registry</td></tr>
+    <tr><td><strong>--access public</strong></td><td>Makes the package publicly accessible (required for free accounts)</td></tr>
+    <tr><td><strong>Semantic Versioning</strong></td><td>MAJOR.MINOR.PATCH — e.g., 1.0.0 → 1.0.1 (patch fix)</td></tr>
+    <tr><td><strong>"files" field</strong></td><td>Whitelist of files to include in the published package</td></tr>
+    <tr><td><strong>.npmignore</strong></td><td>Blacklist of files to exclude from the published package</td></tr>
+  </table>
+
+  <h3>Publishing Commands</h3>
+  <pre><code># First time publish
+npm login
+npm publish --access public
+
+# Update version and republish
+npm version patch      # 1.0.0 → 1.0.1
+npm publish
+
+# Check what will be published
+npm pack --dry-run</code></pre>
+
+  <h3>What Got Published</h3>
+  <table>
+    <tr><th>File</th><th>Size</th><th>Included?</th></tr>
+    <tr><td>README.md</td><td>1.9 KB</td><td>✅</td></tr>
+    <tr><td>bin/cli.js</td><td>955 B</td><td>✅</td></tr>
+    <tr><td>package.json</td><td>701 B</td><td>✅ (always)</td></tr>
+    <tr><td>src/prompts.js</td><td>3.2 KB</td><td>✅</td></tr>
+    <tr><td>src/scaffold.js</td><td>4.5 KB</td><td>✅</td></tr>
+    <tr><td>src/templates/*.js</td><td>~17 KB</td><td>✅</td></tr>
+    <tr><td>node_modules/</td><td>—</td><td>❌ (excluded)</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>8.4 KB (compressed)</strong></td><td></td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 10: REAL WORLD EXAMPLES
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <h2><span class="section-num">10</span> Real World Usage Examples</h2>
+
+  <h3>Example 1: Create a React App</h3>
+  <pre><code>$ npx create-devkit-cli
+
+  ╔══════════════════════════════════╗
+  ║       create-devkit  v1.0.0       ║
+  ║   ⚡ Scaffold projects instantly   ║
+  ╚══════════════════════════════════╝
+
+? 📁 Project name: my-portfolio
+? 🎨 Select a project template: ⚛ React (Vite + React)
+? 📦 Package manager: npm
+? 🔧 Initialize a git repository? Yes
+? 📥 Install dependencies automatically? Yes
+
+✔ Created my-portfolio/
+✔ Scaffolded react template
+✔ Git repository initialized
+✔ Dependencies installed
+
+  ✔  Project ready! Happy hacking! 🚀
+
+  Next steps:
+
+    cd my-portfolio
+    npm run dev</code></pre>
+
+  <h3>Example 2: Quick Node.js API</h3>
+  <pre><code>$ npx create-devkit-cli my-api -t node-api
+
+✔ Created my-api/
+✔ Scaffolded node-api template
+✔ Git repository initialized
+✔ Dependencies installed
+
+  ✔  Project ready! Happy hacking! 🚀
+
+  Next steps:
+
+    cd my-api
+    npm run dev</code></pre>
+
+  <h3>Example 3: Check Version</h3>
+  <pre><code>$ npx create-devkit-cli --version
+1.0.0</code></pre>
+
+  <h3>Live npm Link</h3>
+  <div class="info-box purple">
+    <div class="label">🔗 Published Package</div>
+    <p><strong>https://www.npmjs.com/package/create-devkit-cli</strong></p>
+    <p>Anyone in the world can now run: <code>npx create-devkit-cli</code></p>
+  </div>
+
+  <div class="footer">
+    create-devkit-cli v1.0.0 • Built with Node.js • Published on npm<br>
+    © 2026 Ritesh Verma • MIT License
+  </div>
+</div>
+
+</body>
+</html>
