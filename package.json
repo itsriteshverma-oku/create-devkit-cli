@@ -25,9 +25,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/riteshverma/create-devkit-cli"
+    "url": "https://github.com/riteshverma/create-devkit-cli.git"
   },
-  "homepage": "https://www.npmjs.com/package/create-devkit-cli",
+  "homepage": "https://www.npmjs.com/package/create-devkit-cli#readme",
   "bugs": {
     "url": "https://github.com/riteshverma/create-devkit-cli/issues"
   },
