@@ -1,6 +1,6 @@
 {
   "name": "create-devkit-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Interactive CLI scaffolding tool — scaffold Vanilla JS, React, React+TS, Node.js API, Node API+TS, and CLI tool projects instantly.",
   "main": "src/index.js",
   "bin": {
