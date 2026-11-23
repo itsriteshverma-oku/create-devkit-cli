@@ -25,11 +25,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/riteshverma/create-devkit-cli.git"
+    "url": "git+https://github.com/itsriteshverma-oku/create-devkit-cli.git"
   },
-  "homepage": "https://www.npmjs.com/package/create-devkit-cli#readme",
+  "homepage": "https://github.com/itsriteshverma-oku/create-devkit-cli#readme",
   "bugs": {
-    "url": "https://github.com/riteshverma/create-devkit-cli/issues"
+    "url": "https://github.com/itsriteshverma-oku/create-devkit-cli/issues"
   },
   "dependencies": {
     "chalk": "^4.1.2",
